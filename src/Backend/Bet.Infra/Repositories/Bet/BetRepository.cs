@@ -1,5 +1,6 @@
 ﻿using Bet.Domain.Repositories.Bet;
 using Bet.Infra.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bet.Infra.Repositories.Bet;
 internal class BetRepository : IBetRepository
@@ -15,9 +16,9 @@ internal class BetRepository : IBetRepository
         await _context.Bets.AddAsync(bet);
     }
 
-    public Task<IEnumerable<Domain.Entities.Bet>> GetBets()
+    public async Task<IEnumerable<Domain.Entities.Bet>> GetBets()
     {
-        throw new NotImplementedException();
+        return await _context.Bets.ToListAsync();
     }
 
     public async Task<Domain.Entities.Bet?> GetById(int id)

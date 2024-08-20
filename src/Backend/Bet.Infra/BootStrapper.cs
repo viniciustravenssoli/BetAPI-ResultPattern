@@ -2,10 +2,12 @@
 using Bet.Domain.Repositories.Bet;
 using Bet.Domain.Repositories.Match;
 using Bet.Domain.Repositories.Team;
+using Bet.Domain.Repositories.User;
 using Bet.Infra.Context;
 using Bet.Infra.Repositories.Bet;
 using Bet.Infra.Repositories.Match;
 using Bet.Infra.Repositories.Team;
+using Bet.Infra.Repositories.User;
 using Bet.Infra.Uow;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,5 +43,6 @@ public static class BootStrapper
         services.AddScoped<IBetRepository, BetRepository>();
         services.AddScoped<IMatchRepository, MatchRepository>();
         services.AddScoped<ITeamRepository, TeamRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 }

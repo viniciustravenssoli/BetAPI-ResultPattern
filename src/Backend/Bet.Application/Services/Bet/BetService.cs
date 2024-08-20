@@ -1,6 +1,7 @@
 ﻿using Bet.Application.Commun;
 using Bet.Application.DTOs;
 using Bet.Application.Interfaces;
+using Bet.Application.Services.LoggedUser;
 using Bet.Domain.Repositories.Bet;
 using Bet.Infra.Uow;
 using OneOf;
@@ -16,13 +17,14 @@ internal class BetService : IBetService
     private readonly IMatchService _matchService;
     private readonly IBetRepository _betRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILoggedUser _loggedUser;
 
-
-    public BetService(IMatchService matchService, IBetRepository betRepository, IUnitOfWork unitOfWork)
+    public BetService(IMatchService matchService, IBetRepository betRepository, IUnitOfWork unitOfWork, ILoggedUser loggedUser)
     {
         _matchService = matchService;
         _betRepository = betRepository;
         _unitOfWork = unitOfWork;
+        _loggedUser = loggedUser;
     }
 
     public async Task<OneOf<Domain.Entities.Bet, AppError>> PlaceBet(PlaceBetDTO dto)
@@ -33,13 +35,13 @@ internal class BetService : IBetService
         {
             return new AppError("MatchNotFound", "The specified match could not be found.");
         }
-
         match.PlaceBet(dto.TeamId, dto.Amount);
 
+        var user = await _loggedUser.GetUser();
 
         var odd = CalculateOdds(match.AmountOnTeamA, match.AmountOnTeamB, dto.TeamId, match.TeamAId, match.TeamBId);
 
-        var bet = new Domain.Entities.Bet(dto.MatchId, 1, dto.TeamId, dto.Amount, odd, DateTime.UtcNow);
+        var bet = new Domain.Entities.Bet(dto.MatchId, user.Id, dto.TeamId, dto.Amount, odd, DateTime.UtcNow);
 
         await _betRepository.Add(bet);
         await _unitOfWork.Commit();

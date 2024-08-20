@@ -13,6 +13,7 @@ public class BettingDbContext : DbContext
     public DbSet<Domain.Entities.Bet> Bets { get; set; }
     public DbSet<Team> Teams { get; set; }
     public DbSet<Match> Matches { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

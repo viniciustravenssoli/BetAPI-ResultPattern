@@ -1,5 +1,6 @@
 ﻿using Bet.Domain.Repositories.Match;
 using Bet.Infra.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bet.Infra.Repositories.Match;
 internal class MatchRepository : IMatchRepository
@@ -21,8 +22,8 @@ internal class MatchRepository : IMatchRepository
         return await _context.Matches.FindAsync(id);
     }
 
-    public Task<IEnumerable<Domain.Entities.Match>> GetMatches()
+    public async Task<IEnumerable<Domain.Entities.Match>> GetMatches()
     {
-        throw new NotImplementedException();
+        return await _context.Matches.ToListAsync();
     }
 }
